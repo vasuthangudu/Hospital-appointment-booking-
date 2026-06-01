@@ -1,5 +1,5 @@
 
-                                                                      🏥 Hospital Appointment Booking System
+                                  🏥 Hospital Appointment Booking System
                                                                       
 => Project Figma Desion
 
