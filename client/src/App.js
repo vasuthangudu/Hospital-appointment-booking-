@@ -34,4 +34,4 @@ function App() {
 }
 export default App;   
 
-{/* frontend client side */}
+{/* frontend client  */}
