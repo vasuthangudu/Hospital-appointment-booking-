@@ -1,12 +1,23 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  // Use state to manage the menu collapse
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const token = localStorage.getItem("authToken");
+  const authUser = JSON.parse(localStorage.getItem("authUser") || "null");
+  const isPatientLoggedIn = Boolean(token && authUser?.role === "patient");
+  const isDoctorLoggedIn = Boolean(token && authUser?.role === "doctor");
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("authUser");
+    closeMenu();
+    navigate("/create-account");
+  };
 
   return (
     <>
@@ -40,16 +51,28 @@ const Navbar = () => {
 
           <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="menu">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0" onClick={closeMenu}>
-              <li className="nav-item px-2"><Link to="/" className="nav-link">HOME</Link></li>
+              <li className="nav-item px-2"><Link to="/home" className="nav-link">HOME</Link></li>
               <li className="nav-item px-2"><Link to="/doctors" className="nav-link">ALL DOCTORS</Link></li>
               <li className="nav-item px-2"><Link to="/about" className="nav-link">ABOUT</Link></li>
               <li className="nav-item px-2"><Link to="/contact" className="nav-link">CONTACT</Link></li>
             </ul>
             
             <div className="d-flex px-2" onClick={closeMenu}>
-              <button className="btn btn-primary rounded-pill px-4">
-                <Link to="/create-account" className="btn-link-white">Create Account</Link>
-              </button>
+              {isPatientLoggedIn ? (
+                <>
+                  <Link to="/my-profile" className="btn btn-outline-primary rounded-pill px-3 me-2">My Profile</Link>
+                  <button className="btn btn-primary rounded-pill px-4" onClick={handleLogout}>Logout</button>
+                </>
+              ) : isDoctorLoggedIn ? (
+                <>
+                  <a href={process.env.REACT_APP_ADMIN_URL || "http://localhost:3001"} className="btn btn-outline-primary rounded-pill px-3 me-2">Doctor Dashboard</a>
+                  <button className="btn btn-primary rounded-pill px-4" onClick={handleLogout}>Logout</button>
+                </>
+              ) : (
+                <button className="btn btn-primary rounded-pill px-4">
+                  <Link to="/create-account" className="btn-link-white">Create Account</Link>
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Navbar from "./layout/Navbar/Navbar";
-import Sidebar from "./layout/Sidebar/Sidebar";
+import Navbar from "./layout/navbar/Navbar";
+import Sidebar from "./layout/sidebar/Sidebar";
 
 import Main from "./components/Main";
 import Appointments from "./components/Appointments";
@@ -11,6 +11,22 @@ import DoctorList from "./components/DoctorList";
 import PatientList from "./components/PatientList";
 
 function App() {
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const user = urlParams.get("user");
+
+    if (token) {
+      localStorage.setItem("authToken", token);
+    }
+    if (user) {
+      localStorage.setItem("authUser", user);
+    }
+    if (token || user) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       {/* Navbar */}

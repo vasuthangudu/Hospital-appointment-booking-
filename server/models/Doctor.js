@@ -1,17 +1,19 @@
-const Employee = require("../models/Doctor")
+const mongoose = require("mongoose");
 
-const createDoctor = async (req, res) => {
-    try {
-        const{name,email,password,experience,fee,speciality,education,address,about} = req.body
-     
-         const doctor = new Employee({
-            name,email,password,experience,fee,speciality,education,address,about
-         })
-         await doctor.save()
-         res.status(201).json(doctor)
-    }catch (error) {
-        res.status(500).json({message: "Error creating doctor", error})
-    }
-}
+const doctorSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  password: { type: String, required: true },
+  experience: { type: Number, default: 0 },
+  fee: { type: Number, default: 0 },
+  speciality: { type: String, default: 'General' },
+  education: { type: String, default: 'Pending' },
+  address: { type: String, default: 'Pending' },
+  about: { type: String, default: 'Pending' },
+  image: { type: String, default: null },
+  imageFileName: { type: String, default: null },
+}, { timestamps: true });
 
-exports.exports = {createDoctor}
+const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);
+ 
+module.exports = Doctor;

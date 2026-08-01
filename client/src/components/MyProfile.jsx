@@ -1,8 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./NavBar";
+import { useNavigate } from "react-router-dom";
 
 function MyProfile() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Get logged-in user data from localStorage
+    const authUser = localStorage.getItem("authUser");
+    
+    if (!authUser) {
+      // If no user logged in, redirect to login
+      navigate("/");
+      return;
+    }
+
+    try {
+      const userData = JSON.parse(authUser);
+      setUser(userData);
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      navigate("/");
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate]);
+
+  if (loading) {
+    return (
+      <div>
+        <NavBar />
+        <div className="container py-5 text-center">
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div>
+        <NavBar />
+        <div className="container py-5 text-center">
+          <p className="text-danger">No user found. Please login first.</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <NavBar/>
@@ -14,13 +61,14 @@ function MyProfile() {
           {/* Profile Header */}
           <div className="d-flex align-items-center mb-4">
             <img 
-              src="/imgaes/profile_pic.png" 
+              src="/images/profile_pic.png" 
               alt="Profile" 
               className="rounded-circle img-fluid" 
-              style={{ width: "120px", height: "120px", objectFit: "cover" }}
+              style={{ width: "120px", height: "120px", objectFit: "cover", backgroundColor: "#e9ecef" }}
             />
             <div className="ms-4">
-              <h3 className="fw-bold">Edward Vincent</h3>
+              <h3 className="fw-bold">{user.fullName || "User"}</h3>
+              <p className="text-muted mb-0">Patient</p>
             </div>
           </div>
 
@@ -30,26 +78,26 @@ function MyProfile() {
           <h5 className="text-uppercase text-muted mb-3">Contact Information</h5>
           <div className="row mb-4">
             <div className="col-4 col-md-3 fw-bold">Email id:</div>
-            <div className="col-8 col-md-9 text-primary">richardjameswap@gmail.com</div>
+            <div className="col-8 col-md-9 text-primary">{user.email || "N/A"}</div>
           </div>
           <div className="row mb-4">
             <div className="col-4 col-md-3 fw-bold">Phone:</div>
-            <div className="col-8 col-md-9 text-primary">+1 123 456 7890</div>
+            <div className="col-8 col-md-9 text-primary">{user.phone || "Not provided"}</div>
           </div>
           <div className="row mb-4">
             <div className="col-4 col-md-3 fw-bold">Address:</div>
-            <div className="col-8 col-md-9 text-muted">57th Cross, Richmond Circle,<br />Church Road, London</div>
+            <div className="col-8 col-md-9 text-muted">{user.address || "Not provided"}</div>
           </div>
 
           {/* Basic Information */}
           <h5 className="text-uppercase text-muted mb-3">Basic Information</h5>
           <div className="row mb-3">
             <div className="col-4 col-md-3 fw-bold">Gender:</div>
-            <div className="col-8 col-md-9">Male</div>
+            <div className="col-8 col-md-9">{user.gender || "Not provided"}</div>
           </div>
           <div className="row mb-4">
             <div className="col-4 col-md-3 fw-bold">Birthday:</div>
-            <div className="col-8 col-md-9">20 July, 2024</div>
+            <div className="col-8 col-md-9">{user.dateOfBirth || "Not provided"}</div>
           </div>
 
           {/* Buttons */}

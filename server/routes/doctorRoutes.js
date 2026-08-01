@@ -1,14 +1,25 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/multer");
 
-const { createDoctor } = require("../controllers/doctorController")
+const {
+    createDoctor,
+    getAllDoctors,
+    singleDoctor,
+    doctorOne,
+    deleteDoctor
+} = require("../controllers/doctorController");
 
-router.post("/", createDoctor);
-router.post("/create", createDoctor);
-const Doctor = require("../models/Doctor")
+// Create Doctor with image upload
+router.post("/add-doctor", upload.single("image"), createDoctor);
 
-// get , post , put/patch , delete
+// Get All Doctors
+router.get("/all-doctors", getAllDoctors);
 
-router.post("/add-doctor", createDoctor);
+router.get("/single-doctor/:id", singleDoctor);
+
+router.put("/update-doctor/:id", doctorOne);
+
+router.delete("/delete-doctor/:id", deleteDoctor);
 
 module.exports = router;

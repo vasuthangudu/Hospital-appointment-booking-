@@ -1,6 +1,13 @@
 import React from "react";
 
 const Navbar = () => {
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("authUser");
+    const clientUrl = process.env.REACT_APP_CLIENT_URL || "http://localhost:3000";
+    window.location.href = `${clientUrl}/create-account`;
+  };
+
   return (
     <nav
       className="navbar navbar-expand-lg bg-white border-bottom px-4"
@@ -18,7 +25,7 @@ const Navbar = () => {
           </span>
         </div>
 
-        <button className="btn btn-primary rounded-pill px-4">
+        <button className="btn btn-primary rounded-pill px-4" onClick={handleLogout}>
           Logout
         </button>
 
