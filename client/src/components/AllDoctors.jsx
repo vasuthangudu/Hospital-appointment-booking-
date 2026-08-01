@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "https://hospital-appointment-booking-1-mzml.onrender.com";
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=80";
 
 function AllDoctors() {
@@ -421,4 +421,4 @@ function AllDoctors() {
   );
 }
 
-export default AllDoctors;
+export default AllDoctors;
